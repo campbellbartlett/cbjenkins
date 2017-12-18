@@ -1,0 +1,35 @@
+# This dockerfile creates a data only image.
+# It is intended to store the config for my jenkins set up
+# so that the jenkins-master image can be rebuild with
+# config persisting between rebuilds
+
+# Base image for this image
+FROM debian:jessie
+
+LABEL maintainer="cbartlett"
+
+# create a new user called jenkins with the same home directory,
+# bash settings and UID as the jenkins-master image.
+# This ensures that there are no file permission errors when sharing
+# data between the two images.
+RUN useradd -d "/var/jenkins_home" -u 1000 -m -s /bin/bash jenkins
+
+# Create the jenkins log directory, in the same spot as the log
+# directory created in the jenkins-master dockerfile
+RUN mkdir -p /var/log/jenkins
+# allow the jenkins user to read/write from this directory
+RUN chown -R jenkins:jenkins /var/log/jenkins
+
+# Mount the folder that was just created and the home folder for
+# the jenkins user
+VOLUME ["/var/log/jenkins", "/var/jenkins_home"]
+
+# Set the user to jenkins so that any further commands are run under jenkins
+# and not root.
+USER jenkins
+
+# Because this file is a data only image, it wont be running. It will be built
+# and then remain dormant and only the data in the image will be accessible 
+# by jenkins-master. But so that it is clear that the image was built correctly
+# it will output to the console. If this message isn't seen then there is a problem
+CMD ["echo", "Jenkins data container successfully set up and run"]

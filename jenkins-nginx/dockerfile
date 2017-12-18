@@ -1,0 +1,18 @@
+# dockerfile to build a container running nginx to serve as a reverse proxy
+# for my jenkins build
+
+# Debian jessie is being used as it is the same base image used for jenkins-data
+FROM debian:jessie
+
+LABEL maintainer="cbartlett"
+
+# apt-get update and install nginx
+# -y skips the install [Y/N]? prompt
+RUN apt-get update && apt-get install nginx -y
+
+COPY conf/jenkins.conf /etc/nginx/conf.d/jenkins.conf
+COPY conf/nginx.conf /etc/nginx/nginx.conf
+
+EXPOSE 80
+
+CMD [  "nginx"  ]

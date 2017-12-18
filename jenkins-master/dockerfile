@@ -1,0 +1,38 @@
+# 2.89.2 is the version of Jenkins that was tagged as latest when I created
+# my Jenkins build. I've hard coded this version as I know its compatible
+# with the rest of the CD/CI build I've created. If I ever update this
+# version due to new features or security patches, I'll comment here 
+# so it is clear what was changed and why.
+FROM jenkins/jenkins:2.89.2
+
+LABEL maintainer="cbartlett"
+
+# Change the user to root for directory creation permission
+#
+#                                **NOTE** 
+# dockerfiles usually defaults to root as the user that is running commands,
+# however the jenkins image which is pulled in the first step of this
+# dockerfile sets the user to jenkins as its last build step.
+# This is why the user must be changed back to root
+#
+USER root
+
+# Create a directory for storing the jenkins log
+RUN mkdir /var/log/jenkins
+# Create a directory for storing the jenkin cache. This is set by default to
+# the jenkins_home directory, but the jenkins_home directory is being saved
+# between builds in the jenkins-data image. By moving this cache to a new folder
+# it will prevent the cache from persisting between builds.
+RUN mkdir /var/cache/jenkins
+
+# Give the user jenkins read/write access to the newly created directories
+RUN chown -R  jenkins:jenkins /var/log/jenkins
+RUN chown -R jenkins:jenkins /var/cache/jenkins
+
+# log back in as jenkins
+USER jenkins
+
+# Set Jenkins to output logs to /var/log/jenkins.log
+# Set the jenkins webroot directory to /var/cache/jenkins/war
+# which stops the cache from persisting between builds
+ENV JENKINS_OPTS --logfile=/var/log/jenkins/jenkins.log --webroot=/var/cache/jenkins/war
