@@ -29,6 +29,13 @@ RUN mkdir /var/cache/jenkins
 RUN chown -R  jenkins:jenkins /var/log/jenkins
 RUN chown -R jenkins:jenkins /var/cache/jenkins
 
+# install python
+RUN apt-get update && \
+apt-get install -y python3.4 && \
+apt-get install -y python3-pip && \
+apt-get install -y virtualenv
+
+
 # log back in as jenkins
 USER jenkins
 
