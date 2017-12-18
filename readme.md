@@ -34,6 +34,13 @@ docker-compose build
 ```
 docker-compose up -d
 ```
+The first time you run the container, you will need to collect the install password
+from the jenkins log:
+```
+docker exec jenkinsdocker_jenkinsmaster_1 tail -n 100 /var/log/jenkins/jenkins.log
+```
+will show the log file in the terminal. Find the password by looking for 3 lines of /*
+
 
 ###### How to stop:
 ```
