@@ -37,7 +37,7 @@ docker-compose up -d
 The first time you run the container, you will need to collect the install password
 from the jenkins log:
 ```
-docker exec jenkinsdocker_jenkinsmaster_1 tail -n 100 /var/log/jenkins/jenkins.log
+docker exec cbjenkins_jenkinsmaster_1 tail -n 100 /var/log/jenkins/jenkins.log
 ```
 Show the log file in the terminal. Find the password by looking for 3 lines of *
 
@@ -55,7 +55,7 @@ docker-compose rm
 
 ###### How to stop and remove everything except jenkins-data:
 ```
-docker-compose stop jenkinsdocker_jenkinsnginx_1
-docker-compose stop jenkinsdocker_jenkinsmaster_1
+docker-compose stop cbjenkins_jenkinsnginx_1
+docker-compose stop cbjenkins_jenkinsmaster_1
 docker rm jenkinsmaster jenkinsnginx
 ```
